@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 declare (strict_types = 1);
 
-namespace Chengyi\validate;
+namespace Chengyi\ThinkValidate\validate;
 
 /**
  * Class ValidateRule

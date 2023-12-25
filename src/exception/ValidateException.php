@@ -9,7 +9,7 @@
 // | Author: yunwuxin <448901948@qq.com>
 // +----------------------------------------------------------------------
 
-namespace Chengyi\exception;
+namespace Chengyi\ThinkValidate\exception;
 
 /**
  * 数据验证异常

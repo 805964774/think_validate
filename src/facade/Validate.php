@@ -9,7 +9,7 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 
-namespace Chengyi\facade;
+namespace Chengyi\ThinkValidate\facade;
 
 use Chengyi\Facade;
 

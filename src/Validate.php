@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 declare (strict_types = 1);
 
-namespace Chengyi;
+namespace Chengyi\ThinkValidate;
 
 use Closure;
 use Chengyi\exception\ValidateException;
