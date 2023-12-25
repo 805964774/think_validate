@@ -1,0 +1,21 @@
+{
+    "name": "chengyi/think_validate",
+    "description": "thinkphp validate不维护了，自己重新搞一个，方便自己维护",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Chengyi\\ThinkValidate\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "靳陆陆",
+            "email": "a805964774@foxmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.1.0",
+        "topthink/think-container":"~2.0"
+    }
+}
