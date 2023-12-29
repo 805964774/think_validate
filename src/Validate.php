@@ -12,9 +12,9 @@ declare (strict_types = 1);
 
 namespace Chengyi\ThinkValidate;
 
+use Chengyi\ThinkValidate\exception\ValidateException;
+use Chengyi\ThinkValidate\validate\ValidateRule;
 use Closure;
-use Chengyi\exception\ValidateException;
-use Chengyi\validate\ValidateRule;
 
 /**
  * 数据验证类
@@ -766,12 +766,6 @@ class Validate
                 // 是否为数组
                 $result = is_array($value);
                 break;
-            case 'file':
-                $result = $value instanceof File;
-                break;
-            case 'image':
-                $result = $value instanceof File && in_array($this->getImageType($value->getRealPath()), [1, 2, 3, 6]);
-                break;
             default:
                 if (isset($this->type[$rule])) {
                     // 注册的验证规则
@@ -790,21 +784,6 @@ class Validate
         }
 
         return $result;
-    }
-
-    // 判断图像类型
-    protected function getImageType($image)
-    {
-        if (function_exists('exif_imagetype')) {
-            return exif_imagetype($image);
-        }
-
-        try {
-            $info = getimagesize($image);
-            return $info ? $info[2] : false;
-        } catch (\Exception $e) {
-            return false;
-        }
     }
 
     /**
@@ -837,113 +816,6 @@ class Validate
         }
 
         return $this->filter($value, [FILTER_VALIDATE_IP, 'ipv6' == $rule ? FILTER_FLAG_IPV6 : FILTER_FLAG_IPV4]);
-    }
-
-    /**
-     * 验证上传文件后缀
-     * @access public
-     * @param  mixed $file  上传文件
-     * @param  mixed $rule  验证规则
-     * @return bool
-     */
-    public function fileExt($file, $rule): bool
-    {
-        if (is_array($file)) {
-            foreach ($file as $item) {
-                if (!($item instanceof File) || !$item->checkExt($rule)) {
-                    return false;
-                }
-            }
-            return true;
-        } elseif ($file instanceof File) {
-            return $file->checkExt($rule);
-        }
-
-        return false;
-    }
-
-    /**
-     * 验证上传文件类型
-     * @access public
-     * @param  mixed $file  上传文件
-     * @param  mixed $rule  验证规则
-     * @return bool
-     */
-    public function fileMime($file, $rule): bool
-    {
-        if (is_array($file)) {
-            foreach ($file as $item) {
-                if (!($item instanceof File) || !$item->checkMime($rule)) {
-                    return false;
-                }
-            }
-            return true;
-        } elseif ($file instanceof File) {
-            return $file->checkMime($rule);
-        }
-
-        return false;
-    }
-
-    /**
-     * 验证上传文件大小
-     * @access public
-     * @param  mixed $file  上传文件
-     * @param  mixed $rule  验证规则
-     * @return bool
-     */
-    public function fileSize($file, $rule): bool
-    {
-        if (is_array($file)) {
-            foreach ($file as $item) {
-                if (!($item instanceof File) || !$item->checkSize($rule)) {
-                    return false;
-                }
-            }
-            return true;
-        } elseif ($file instanceof File) {
-            return $file->checkSize($rule);
-        }
-
-        return false;
-    }
-
-    /**
-     * 验证图片的宽高及类型
-     * @access public
-     * @param  mixed $file  上传文件
-     * @param  mixed $rule  验证规则
-     * @return bool
-     */
-    public function image($file, $rule): bool
-    {
-        if (!($file instanceof File)) {
-            return false;
-        }
-
-        if ($rule) {
-            $rule = explode(',', $rule);
-
-            list($width, $height, $type) = getimagesize($file->getRealPath());
-
-            if (isset($rule[2])) {
-                $imageType = strtolower($rule[2]);
-
-                if ('jpeg' == $imageType) {
-                    $imageType = 'jpg';
-                }
-
-                if (image_type_to_extension($type, false) != $imageType) {
-                    return false;
-                }
-            }
-
-            list($w, $h) = $rule;
-
-            return $w == $width && $h == $height;
-        }
-
-        return in_array($this->getImageType($file->getRealPath()), [1, 2, 3, 6]);
     }
 
     /**
@@ -1106,8 +978,6 @@ class Validate
     {
         if (is_array($value)) {
             $length = count($value);
-        } elseif ($value instanceof File) {
-            $length = $value->getSize();
         } else {
             $length = mb_strlen((string) $value);
         }
@@ -1133,8 +1003,6 @@ class Validate
     {
         if (is_array($value)) {
             $length = count($value);
-        } elseif ($value instanceof File) {
-            $length = $value->getSize();
         } else {
             $length = mb_strlen((string) $value);
         }
@@ -1153,8 +1021,6 @@ class Validate
     {
         if (is_array($value)) {
             $length = count($value);
-        } elseif ($value instanceof File) {
-            $length = $value->getSize();
         } else {
             $length = mb_strlen((string) $value);
         }
